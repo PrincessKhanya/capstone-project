@@ -1,0 +1,19 @@
+body{
+    background: linear-gradient(135deg,#a0eacf,#014872);
+    font-family: 'Open Sans', sans-serif;
+    background-size: cover;
+    
+}
+
+.logo {
+    display: flex;
+    
+}
+
+.pic-logo {
+    width: 150px;
+}
+
+.name {
+    margin-top: 75px;
+}
