@@ -8,6 +8,13 @@
 
 
 body{
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    left: 0;
+    top: 0;
+    font-size: 100%;
     background: rgba(70, 157, 137, 0.15);
     font-family: 'Open Sans', sans-serif;
      
@@ -27,15 +34,84 @@ body{
     font-size: 1.5em;
     font-weight: 700;
     text-transform: uppercase;
+    position: relative;
+    color:#0e3742;
+    text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75),0.025em 0.05em 0 rgba(0,0,255,0.75);
+    animation: logo-pic 500ms linear infinite;
+    -webkit-box-reflect: below 1px linear-gradient(transparent, #0004);
+    line-height: 0.70em;
+    outline: none;
 
-    text-shadow: 
-     0.05em 0 0 rgba(255,0,0,0.75),
-     -0.025em -0.05em 0 rgba(0,255,0,0.75),
-     0.025em 0.05 0 rgba(0,0,255,0.75);
-    
 
 
 }
+
+.logo-pic span {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+s
+.logo-pic span:first-child{
+    animation: logo-pic 650ms infinite;
+    clip-path: polygon(0 0, 100% 0,100% 45%,0 45%);
+    transform: translate(-0.025em, -0.025em);
+    opacity: 0.8;
+
+
+}
+.logo-pic span:last-child{
+    animation: logo-pic 375ms infinite;
+    clip-path: polygon(0 80%, 100% 20%,100% 100%,0 100%);
+    transform: translate(0.0125em, 0.025em);
+    opacity: 0.8;
+
+}
+
+@keyframes logo-pic {
+    0%,18%,20%,50.1%,60%,65.1%,80%,90.1%,92%{
+        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75),0.025em 0.05em 0 rgba(0,0,255,0.75);
+        color: #0e3742;
+        box-shadow: none;
+    }
+
+    14%{
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75),-0.05em -0.05em 0 rgba(0,0,255,0.75);
+    }
+    15%{
+        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75),-0.05em -0.05em 0 rgba(0,0,255,0.75);
+    }
+
+    49%{
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75),0 -0.05em 0 rgba(0,0,255,0.75);
+    }
+    50%{
+        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75),0 -0.05em 0 rgba(0,0,255,0.75);
+    }
+
+    99%{
+        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75),-0.025em -0.05em 0 rgba(0,0,255,0.75);
+    }
+    18.1%,20.1%,30%,50%,60.1%,65%,80.1%,90%,92.1%,100%{
+        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75),-0.025em -0.05em 0 rgba(0,0,255,0.75);
+        color: #fff;
+        text-shadow: 0 0 10px #03bcf4,
+        0 0 20px #03bcf4;
+    }
+    
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-delay: -1ms !important;
+      animation-duration: 1ms !important;
+      animation-iteration-count: 1 !important;
+      background-attachment: initial !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0s !important;
+      transition-delay: 0s !important;
+    }
+  }
 
 .nav-bar{
     /* margin-left: 2.5em; */
@@ -204,6 +280,16 @@ ul li:hover::after{
     margin-right: -15px;
 }
 
+.calenders{
+    margin: 0.5em;
+    padding: 0.5em;
+    background-color: rgba(70, 157, 137, 0.5);
+    margin-top: -5px;
+    margin-left: -15px;
+    margin-right: -15px;
+    text-align: center;
+}
+
 .monthly{
     flex: 1;
     text-align: center;
@@ -218,3 +304,4 @@ ul li:hover::after{
     flex: 1;
     text-align: center;
 }
+
