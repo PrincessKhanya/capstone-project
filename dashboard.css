@@ -7,6 +7,12 @@
 @import url('https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap');
 
 
+*{
+    margin: 0;
+    padding: 0;
+}
+
+
 body{
     height: 100%;
     width: 100%;
@@ -24,6 +30,8 @@ body{
     display: flex;
     width: 90%;
     margin: 1em;
+    height: 20px;
+    padding: 1em;
 }
 .humburger{
     flex: 0.2;
@@ -35,90 +43,35 @@ body{
     font-weight: 700;
     text-transform: uppercase;
     position: relative;
-    color:#0e3742;
-    text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75),0.025em 0.05em 0 rgba(0,0,255,0.75);
-    animation: logo-pic 500ms linear infinite;
-    -webkit-box-reflect: below 1px linear-gradient(transparent, #0004);
+    letter-spacing: 1em;
+    color:#fff;
+    text-align: justify;
+    animation: logo-pic 5s linear infinite;
+    -webkit-box-reflect: below 0.0625em linear-gradient(transparent, #0004);
     line-height: 0.70em;
     outline: none;
-
-
-
-}
-
-.logo-pic span {
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-s
-.logo-pic span:first-child{
-    animation: logo-pic 650ms infinite;
-    clip-path: polygon(0 0, 100% 0,100% 45%,0 45%);
-    transform: translate(-0.025em, -0.025em);
-    opacity: 0.8;
-
-
-}
-.logo-pic span:last-child{
-    animation: logo-pic 375ms infinite;
-    clip-path: polygon(0 80%, 100% 20%,100% 100%,0 100%);
-    transform: translate(0.0125em, 0.025em);
-    opacity: 0.8;
 
 }
 
 @keyframes logo-pic {
     0%,18%,20%,50.1%,60%,65.1%,80%,90.1%,92%{
-        text-shadow: 0.05em 0 0 rgba(255,0,0,0.75), -0.025em -0.05em 0 rgba(0,255,0,0.75),0.025em 0.05em 0 rgba(0,0,255,0.75);
-        color: #0e3742;
+        color: #fff;
         box-shadow: none;
     }
-
-    14%{
-        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75),-0.05em -0.05em 0 rgba(0,0,255,0.75);
-    }
-    15%{
-        text-shadow: -0.05em -0.025em 0 rgba(255,0,0,0.75), 0.025em 0.025em 0 rgba(0,255,0,0.75),-0.05em -0.05em 0 rgba(0,0,255,0.75);
-    }
-
-    49%{
-        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75),0 -0.05em 0 rgba(0,0,255,0.75);
-    }
-    50%{
-        text-shadow: 0.025em 0.05em 0 rgba(255,0,0,0.75), 0.05em 0 0 rgba(0,255,0,0.75),0 -0.05em 0 rgba(0,0,255,0.75);
-    }
-
-    99%{
-        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75),-0.025em -0.05em 0 rgba(0,0,255,0.75);
-    }
     18.1%,20.1%,30%,50%,60.1%,65%,80.1%,90%,92.1%,100%{
-        text-shadow: -0.025em 0 0 rgba(255,0,0,0.75), -0.025em -0.025em 0 rgba(0,255,0,0.75),-0.025em -0.05em 0 rgba(0,0,255,0.75);
         color: #fff;
-        text-shadow: 0 0 10px #03bcf4,
-        0 0 20px #03bcf4;
+        text-shadow: 0 0 0.625em #03bcf4,0 0 1.25em #03bcf4,0 0 2.5em #03bcf4,0 0 5em #03bcf4,0 0 10em #03bcf4;
     }
     
 }
 
-@media (prefers-reduced-motion: reduce) {
-    *, ::before, ::after {
-      animation-delay: -1ms !important;
-      animation-duration: 1ms !important;
-      animation-iteration-count: 1 !important;
-      background-attachment: initial !important;
-      scroll-behavior: auto !important;
-      transition-duration: 0s !important;
-      transition-delay: 0s !important;
-    }
-  }
-
 .nav-bar{
-    /* margin-left: 2.5em; */
+    justify-content: space-evenly;
     position: fixed;
     bottom: 0;
     width: 100%;
     background-color: #164d33;
+    padding: 1em;
 }
 
 ul {
@@ -132,7 +85,7 @@ ul li {
     list-style: none;
     display: inline-block;
     padding: 1px 12px;
-    position: relative;
+    /* position: relative; */
 }
 
 ul li a{
@@ -160,8 +113,9 @@ ul li:hover::after{
     background-color: rgba(70, 157, 137, 0.9);
     width: 90%;
     margin: auto;
-    padding: 1em;
+    padding: 0.5em;
     border-radius: 0.5em;
+    margin-right: 5em;
 }
 
 .name-meter{
@@ -189,6 +143,143 @@ ul li:hover::after{
     margin: auto;
 }
 
+#slider {
+    margin: 2em auto;
+    width: 1000px;
+    max-width: 100%;
+    text-align: center;
+ }
+ #slider input[type=radio] {
+    display: none;
+ }
+ #slider label {
+    cursor:pointer;
+    text-decoration: none;
+ }
+ #slides {
+    /* padding: 10px; */
+    /* border: 3px solid #ccc; */
+    /* background: #fff; */
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1) , 6px 6px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+ }
+ #overflow {
+    width: 100%;
+    overflow: hidden;
+ }
+ #slide1:checked ~ #slides .inner {
+    margin-left: 0;
+ }
+ #slide2:checked ~ #slides .inner {
+    margin-left: -100%;
+ }
+ #slide3:checked ~ #slides .inner {
+    margin-left: -200%;
+ }
+ #slide4:checked ~ #slides .inner {
+    margin-left: -300%;
+ }
+
+ #slides .inner {
+    transition: margin-left 800ms cubic-bezier(0.770, 0.000, 0.175, 1.000);
+    width: 400%;
+    line-height: 0;
+    height: 400px;
+ }
+ #slides .slide {
+    width: 25%;
+    float:left;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #fff;
+ }
+ #slides .slide_1 {
+    background-color: rgba(70, 157, 137,0.5);
+ }
+ #slides .slide_2 {
+    background: rgba(70, 157, 137,0.5);
+ }
+ #slides .slide_3 {
+    background: rgba(70, 157, 137,0.5);
+ }
+ #slides .slide_4 {
+    background: rgba(70, 157, 137,0.5);
+ }
+ #controls {
+    margin: -180px 0 0 0;
+    width: 100%;
+    height: 50px;
+    z-index: 3;
+    position: relative;
+ }
+ #controls label {
+    transition: opacity 0.2s ease-out;
+    display: none;
+    width: 50px;
+    height: 50px;
+    opacity: .4;
+ }
+ #controls label:hover {
+    opacity: 1;
+ }
+ #slide1:checked ~ #controls label:nth-child(2),
+ #slide2:checked ~ #controls label:nth-child(3),
+ #slide3:checked ~ #controls label:nth-child(4),
+ #slide4:checked ~ #controls label:nth-child(1) {
+    background: url(https://image.flaticon.com/icons/svg/130/130884.svg) no-repeat;
+    float:right;
+    margin: -50px -50px 0 0;
+    display: block;
+ }
+ #slide1:checked ~ #controls label:nth-last-child(2),
+ #slide2:checked ~ #controls label:nth-last-child(3),
+ #slide3:checked ~ #controls label:nth-last-child(4),
+ #slide4:checked ~ #controls label:nth-last-child(1) {
+    background: url(https://image.flaticon.com/icons/svg/130/130882.svg) no-repeat;
+    float:left;
+    margin: -50px 0 0 -50px;
+    display: block;
+ }
+ #bullets {
+    margin: 150px 0 0;
+    text-align: center;
+ }
+ #bullets label {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius:100%;
+    background: #ccc;
+    margin: 0 10px;
+ }
+ #slide1:checked ~ #bullets label:nth-child(1),
+ #slide2:checked ~ #bullets label:nth-child(2),
+ #slide3:checked ~ #bullets label:nth-child(3),
+ #slide4:checked ~ #bullets label:nth-child(4) {
+    background: #444;
+ }
+ @media screen and (max-width: 900px) {
+    #slide1:checked ~ #controls label:nth-child(2),
+    #slide2:checked ~ #controls label:nth-child(3),
+    #slide3:checked ~ #controls label:nth-child(4),
+    #slide4:checked ~ #controls label:nth-child(1),
+    #slide1:checked ~ #controls label:nth-last-child(2),
+    #slide2:checked ~ #controls label:nth-last-child(3),
+    #slide3:checked ~ #controls label:nth-last-child(4),
+    #slide4:checked ~ #controls label:nth-last-child(1) {
+       margin: 0;
+    }
+    #slides {
+       max-width: calc(100% - 140px);
+       margin: 0 auto;
+    }
+ }
+
+
+
 .box{
     background-color: rgba(70, 157, 137,0.5);
     height: 12.5em;
@@ -198,31 +289,25 @@ ul li:hover::after{
     border-radius: 0.5em;
 }
 
-.flexbox1{
-    display: flex;
-}
 
-.flexbox2{
-    display: flex;
-}
 
 .box1{
-    flex: 1;
     border-radius: 0.5em;
+    font-size: 1.3em;
 }
 
 .box2{
-    flex: 1;
+    font-size: 1.3em;
     border-radius: 0.5em;
 }
 
 .box3{
-    flex: 1;
+    font-size: 1.3em;
     border-radius: 0.5em;
 }
 
 .box4{
-    flex: 1;
+    font-size: 1.3em;
     border-radius: 0.5em;
 }
 
@@ -236,29 +321,25 @@ ul li:hover::after{
     margin: auto;
     background-color: #469D89;
     text-align: center;
-    margin-top: -15px;
-    padding: 0.5em;
+    margin-top: -1em;
+    padding: 1em;
     margin-left: -15px;
     margin-right: -15px;
     border-top-left-radius: 0.5em;
     border-top-right-radius: 0.5em;
 }
 
-.summary{
-    display: flex;
-    
-    
-}
+
 
 .energy-used{
-    flex: 1;
+    
     margin:0.5em;
     padding: 0.5em;
     text-align: center;
 }
 
 .energy-estimate{
-    flex: 1;
+   
     margin:0.5em;
     padding: 0.5em;
     text-align: center;

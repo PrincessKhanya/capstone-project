@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,10 +8,13 @@
     <title>Document</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
+
 <body>
     <div class="logo">
-        <div class="humburger">Humburger</div>
-        <p class="logo-pic"> <span aria-hidden="true">OUR APP</span>  OUR APP <span aria-hidden="true">OUR APP</span> </p>
+        <div class="humburger">hamburger</div>
+        <div class="logo-pic">
+            <h2>OUR APP</h2>
+        </div>
     </div>
     <div class="nav-bar">
         <header>
@@ -19,7 +23,7 @@
                     <li><a href="#dashboard.html">Dashboard</a></li>
                     <li><a href="usage.html">Usage</a></li>
                     <li><a href="bill.html">Bill</a></li>
-                    <li><a href="bill3.html">Loadshedding</a></li>
+                    <li><a href="loadsheding.html">Loadshedding</a></li>
                 </ul>
             </div>
         </header>
@@ -33,14 +37,96 @@
                 Meter no. 124 865 5203
             </div>
         </div>
-        
+
         <div class="address">
             Address : 2974 Orange Steet Park North, Johannesburg
         </div>
-
     </div>
     <div class="main">
-        <div class="flexbox1">
+        <div class="slideholder">
+            <div id="slider">
+                <input type="radio" name="slider" id="slide1" checked>
+                <input type="radio" name="slider" id="slide2">
+                <input type="radio" name="slider" id="slide3">
+                <input type="radio" name="slider" id="slide4">
+                <div id="slides">
+                    <div id="overflow">
+                        <div class="inner">
+                            <div class="slide slide_1">
+                                <div class="slide-content">
+                                    <div class="box1">
+                                        <div class="electricity">
+                                            ELECTRICITY - USAGE BILL
+                                        </div>
+                                        <div class="summary">
+                                            <div class="energy-used">
+                                                Enegy used <strong>R500</strong> as of the 26th of October
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide slide_2">
+                                <div class="slide-content">
+                                    <div class="box1">
+                                        <div class="electricity">
+                                            ELECTRICITY - USAGE BILL
+                                        </div>
+                                        <div class="summary">
+                                            <div class="energy-estimate">
+                                                It is estimated that you will need to buy <strong>R100</strong>
+                                                electricity to have power till the 31st of October
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide slide_3">
+                                <div class="slide-content">
+                                    <div class="box2">
+                                        <div class="electricity">
+                                            BILL SUMMARY
+                                        </div>
+                                        <div class="bill-summary">
+                                            This month you bought <strong>R500</strong> electricity. Which was less then what you bought last
+                                            month
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="slide slide_4">
+                                <div class="slide-content">
+                                    <div class="box3">
+                                        <div class="electricity">
+                                            TODAY'S SUMMARY
+                                        </div>
+                                        <div class="bill-summary">
+                                            <img height="170" width="500" src="pic1.png"
+                                                alt="picture showing houssehold electricity usage over 24 hours">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="controls">
+                    <label for="slide1"></label>
+                    <label for="slide2"></label>
+                    <label for="slide3"></label>
+                    <label for="slide4"></label>
+                </div>
+                <div id="bullets">
+                    <label for="slide1"></label>
+                    <label for="slide2"></label>
+                    <label for="slide3"></label>
+                    <label for="slide4"></label>
+                </div>
+            </div>
+
+
+        </div>
+        <!-- <div class="flexbox1">
             <div class="box box1">
                 <div class="electricity">
                     ELECTRICITY - USAGE BILL
@@ -51,7 +137,8 @@
 
                     </div>
                     <div class="energy-estimate">
-                        It is estimated that you will need to buy <strong>R100</strong> electricity to have power till the 31st of October
+                        It is estimated that you will need to buy <strong>R100</strong> electricity to have power till
+                        the 31st of October
                     </div>
                 </div>
             </div>
@@ -60,10 +147,11 @@
                     BILL SUMMARY
                 </div>
                 <div class="bill-summary">
-                    This month you bought <strong>R500</strong> electricity. Which was less then what you bought last month
+                    This month you bought <strong>R500</strong> electricity. Which was less then what you bought last
+                    month
 
-                </div>  
-            </div> 
+                </div>
+            </div>
         </div>
         <div class="flexbox2">
             <div class="box box3">
@@ -71,7 +159,8 @@
                     TODAY'S SUMMARY
                 </div>
                 <div class="bill-summary">
-                    <img height="170" width="500" src="pic1.png" alt="picture showing houssehold electricity usage over 24 hours">
+                    <img height="170" width="500" src="pic1.png"
+                        alt="picture showing houssehold electricity usage over 24 hours">
                 </div>
             </div>
             <div class="box box4">
@@ -87,9 +176,10 @@
                     <br>
                     3.Wash clothes in cold water, and install efficient shower heads.
                 </div>
-            </div> 
-        </div>
+            </div>
+        </div> -->
     </div>
-    
+
 </body>
+
 </html>
