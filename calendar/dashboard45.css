@@ -1,0 +1,139 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap');
+
+
+body{
+    background: rgba(70, 157, 137, 0.15);
+    font-family: 'Open Sans', sans-serif;
+     
+}
+
+.logo{
+    display: flex;
+    width: 90%;
+    margin: 1em;
+}
+.humburger{
+    flex: 1;
+}
+
+.logo-pic{
+    flex: 1;
+}
+
+.nav-bar{
+    margin-left: 2.5em;
+    position: fixed;
+    bottom: 0;
+    width: 95%;
+}
+
+ul {
+    display: flex;
+    padding: 1px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li {
+    list-style: none;
+    display: inline-block;
+    padding: 1px 12px;
+    position: relative;
+}
+
+ul li a{
+    color: #000;
+    text-decoration: none;
+    text-transform: capitalize;
+}
+
+ul li::after{
+    content: '';
+    width: 0%;
+    height: 2px;
+    background: #49A078;
+    display: block;
+    margin: auto;
+    transition: 0.5s;
+}
+
+ul li:hover::after{
+    width: 100%;
+    color: #49A078;
+}
+
+.details{
+    background-color: rgba(70, 157, 137, 0.9);
+    width: 90%;
+    margin: auto;
+    padding: 1em;
+}
+
+.name-meter{
+    display: flex;
+}
+
+.name{
+    flex: 1;
+    font-family: 'STIX Two Math', serif; 
+    font-size: larger;
+}
+
+.meter-number{
+    flex: 1;
+}
+
+.address{
+    margin-top: 1em;
+    margin-bottom: 1em;
+}
+
+.main{
+    width: 94%;
+    position: relative;
+    margin: auto;
+}
+
+.box{
+    background-color: rgba(70, 157, 137,0.5);
+    height: 12.5em;
+    width: 25em;
+    margin: 1em;
+    padding: 1em;
+}
+
+.flexbox1{
+    display: flex;
+}
+
+.flexbox2{
+    display: flex;
+}
+
+.box1{
+    flex: 1;
+}
+
+.box2{
+    flex: 1;
+}
+
+.box3{
+    flex: 1;
+}
+
+.box4{
+    flex: 1;
+}
+
+.box5{
+    height: 30em;
+    width: 85.5em;
+
+}
