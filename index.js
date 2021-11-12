@@ -21,12 +21,41 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get("/", function(req, res){
-    res.render('dashboard');
-    res.render('bill');
-    res.render('loadsheding');
-    res.render('usage');
+    res.redirect("/dashboard");
   });
+
+app.get("/dashboard", function(req,res){
+    res.render('dashboard');
+});
+
+app.post("/bill", function(req,res){
+    console.log(req.body)
+
+});
+
+app.get("/bill", function(req,res){
+    res.render('bill');
+});
   
+app.post("/loadsheding", function(req,res){
+    console.log(req.body)
+
+});
+
+app.get("/loadsheding", function(req,res){
+    res.render('loadsheding');
+});
+
+app.post("/usage", function(req,res){
+    console.log(req.body)
+
+});
+app.get("/usage", function(req,res){
+    res.render('usage')
+
+});
+
+
 
 
 const PORT = process.env.PORT|| 9000
