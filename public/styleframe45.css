@@ -14,7 +14,6 @@ body{
   background: -o-radial-gradient(center, ellipse cover, rgba(76,76,76,1) 0%, rgba(43,43,43,1) 0%, rgba(23,23,23,1) 91%, rgba(23,23,23,1) 100%);
   background: -ms-radial-gradient(center, ellipse cover, rgba(76,76,76,1) 0%, rgba(43,43,43,1) 0%, rgba(23,23,23,1) 91%, rgba(23,23,23,1) 100%);
   background: radial-gradient(ellipse at center, rgba(76,76,76,1) 0%, rgba(43,43,43,1) 0%, rgba(23,23,23,1) 91%, rgba(23,23,23,1) 100%);
-  background:rgba(70, 157, 137, 0.15);
   }
   .calendar{
     color: rgb(0, 0, 0);
@@ -406,7 +405,6 @@ body{
     width: 100%;
     bottom: 50px;
     left: 0;
-    right: 0;
     position: absolute;
     font-size: 14px;
     text-align: center;
