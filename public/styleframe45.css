@@ -20,9 +20,9 @@ body{
     margin: 10px auto;
     background: rgba(70, 157, 137, 0.15);
     padding: 60px 40px 80px 40px;
-    width: 95%;
-    max-width: 600px;
-    height: 325px;
+    /* width: 95%; */
+    /* max-width: 600px;
+    height: 325px; */
     border-radius: 5px;
     box-shadow: 0px 2px 6px rgba(2,2,2,0.2);
     position: relative;
@@ -403,7 +403,7 @@ body{
   }
   .footer{
     width: 100%;
-    bottom: 50px;
+    bottom: 10px;
     left: 0;
     position: absolute;
     font-size: 14px;

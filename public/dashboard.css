@@ -78,14 +78,13 @@ body{
     
 }
 
-.nav-bar{
-    justify-content: space-evenly;
+.nav-bar {
+    overflow: hidden;
+    background-color: #164d33;
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #164d33;
-    /* padding: 1em; */
-}
+  }
 
 ul {
     display: flex;
@@ -151,8 +150,10 @@ ul li:hover::after{
 
 .main{
     width: 90%;
+    height: 100%;
     position: relative;
     margin: auto;
+    /* margin-bottom: -1em; */
     padding: 1em;
 }
 
@@ -415,14 +416,13 @@ ul li:hover::after{
     
     }
 
-    .nav-bar{
-        justify-content: space-evenly;
+    .nav-bar {
+        overflow: hidden;
+        background-color: #164d33;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #164d33;
-        /* padding: 1em; */
-    }
+      }
 
     .box5{
         height: fit-content;
@@ -493,14 +493,13 @@ ul li:hover::after{
     
     }
 
-    .nav-bar{
-        justify-content: space-evenly;
+    .nav-bar {
+        overflow: hidden;
+        background-color: #164d33;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #164d33;
-        /* padding: 1em; */
-    }
+      }
 
     .box5{
         height: fit-content;
@@ -575,14 +574,13 @@ ul li:hover::after{
     
     }
 
-    .nav-bar{
-        justify-content: space-around;
+    .nav-bar {
+        overflow: hidden;
+        background-color: #164d33;
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: #164d33;
-        /* padding: 1em; */
-    }
+      }
 
     .box5{
         height: fit-content;
@@ -638,3 +636,10 @@ ul li:hover::after{
     
 }
 
+
+.box7{
+    width: 50vw;
+    height: 55vh;
+    margin: auto;
+    /* margin-bottom: 13em; */
+}
