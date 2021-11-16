@@ -1,10 +1,10 @@
 const express=require("express");
 const exphbs = require("express-handlebars");
 const bodyParser=require("body-parser"); 
-//const Calender = require("./calendar");
+// const calender = require("./calendar");
 
 const app = express();
-//const calendar=calender();
+// const calendar=calender();
 
 app.engine("handlebars",exphbs({
     partialsDir: "./views/partials",

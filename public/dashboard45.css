@@ -30,7 +30,7 @@ body{
     margin-left: 2.5em;
     position: fixed;
     bottom: 0;
-    width: 95%;
+    width: 100%;
 }
 
 ul {
@@ -132,8 +132,13 @@ ul li:hover::after{
     flex: 1;
 }
 
-.box5{
+/* .box5{
     height: 30em;
     width: 85.5em;
 
-}
+} */
+
+ .box7{
+     height: 50%;
+     width: 70%;
+ }
