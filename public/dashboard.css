@@ -469,11 +469,11 @@ ul li:hover::after{
     
      }
     
-    .box6{
+    /* .box6{
         height: 800px;
         width: 1024px;
         margin: auto;
-    }
+    } */
 }
 @media (min-width: 768px) {
     .logo-pic{
@@ -548,11 +548,11 @@ ul li:hover::after{
     
      }
 
-    .box6{
+    /* .box6{
         height: 640px;
         width: 770px;
         margin: auto;
-    }
+    } */
 
     
     
@@ -630,11 +630,11 @@ ul li:hover::after{
    
     }
 
-    .box6{
+    /* .box6{
         height: 550px;
         width: 320px;
         margin: auto;
-    }
+    } */
     
 }
 
