@@ -1,10 +1,19 @@
 const express=require("express");
 const exphbs = require("express-handlebars");
-const bodyParser=require("body-parser"); 
-// const calender = require("./calendar");
+const bodyParser=require("body-parser");
+const session=require('express-session') 
+//const Calender = require("./calendar");
 
 const app = express();
-// const calendar=calender();
+//const calendar=Calender();
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+  }))
+
+const users=[];
 
 app.engine("handlebars",exphbs({
     partialsDir: "./views/partials",
@@ -12,7 +21,8 @@ app.engine("handlebars",exphbs({
     layoutsDir : './views/layouts'
 }));
 
-app.set("view engine","handlebars");
+app.set("view engine","handlebars"
+);
 
 app.use(express.static("public"));
 
@@ -21,8 +31,31 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get("/", function(req, res){
-    res.redirect("/dashboard");
-  });
+    res.render('index.handlebars', {name: 'Khanya'});
+});
+
+app.get("/login", function(req, res){
+    res.render('login.handlebars');
+
+});
+app.post("/login", function(req, res){
+    req.session.name=req.body.name;
+    res.redirect("/dashboard")
+    
+});
+
+app.get("/register", function(req, res){
+    res.render('register.handlebars');
+});
+
+app.post("/register", function(req, res){
+    console.log(req.body)
+   
+});
+
+app.post("/register", function(req,res){
+
+})
 
 app.get("/dashboard", function(req,res){
     res.render('dashboard');
