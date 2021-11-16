@@ -1,10 +1,19 @@
 const express=require("express");
 const exphbs = require("express-handlebars");
-const bodyParser=require("body-parser"); 
-// const calender = require("./calendar");
+const bodyParser=require("body-parser");
+const session=require('express-session') 
+//const Calender = require("./calendar");
 
 const app = express();
-// const calendar=calender();
+//const calendar=Calender();
+
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: true
+  }))
+
+const users=[];
 
 app.engine("handlebars",exphbs({
     partialsDir: "./views/partials",
@@ -12,7 +21,8 @@ app.engine("handlebars",exphbs({
     layoutsDir : './views/layouts'
 }));
 
-app.set("view engine","handlebars");
+app.set("view engine","handlebars"
+);
 
 app.use(express.static("public"));
 
