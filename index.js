@@ -21,9 +21,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.get("/", function(req, res){
-    res.redirect("/dashboard");
+    res.redirect("/index");
   });
 
+  app.get("/index", function(req,res){
+    res.render('login');
+});
 app.get("/dashboard", function(req,res){
     res.render('dashboard');
 });
