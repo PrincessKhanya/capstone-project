@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-<div class="container">
+{{!-- <<<<<<< HEAD --}} <div class="container">
   <div class="logo">
     <div class="humburger"><i class="fas fa-user-circle"></i></div>
     <div class="logo-pic">
@@ -8,17 +7,18 @@
   </div>
   <div class="login-box">
     <h2>Login</h2>
-    <form>
+    <form action="/login" method="POST">
       <div class="user-box">
-        <input type="text" name="" required="">
-        <label>Username</label>
+        <input type="email" name="email" id="email" required>
+        <label for="email">Username</label>
       </div>
       <div class="user-box">
-        <input type="password" name="" required="">
-        <label>Password</label>
+        <input type="password" name="password" id="password" required>
+        <label for="password">Password</label>
       </div>
       <div class="user-box">
-        <p>Not registered?<a href="/register" style="all:revert; text-decoration: none; color:black; padding-left:3px"><b>Create
+        <p>Not registered?<a href="/register"
+            style="all:revert; text-decoration: none; color:black; padding-left:3px"><b>Create
               Account</b></a></p>
       </div>
       <button type="submit" style="border: none; background-color:inherit"><a href="/dashboard">
@@ -29,21 +29,25 @@
           Submit
         </a></button>
     </form>
+    {{#if message }}
+    <h4>{{message}}</h4>
+    {{/if}}
+    <a href="/register">Register</a>
   </div>
 
-</div>
-=======
-<h1>Login</h1>
-<form action="/login" method="POST">
+  </div>
+  {{!-- =======
+  <h1>Login</h1>
+  <form action="/login" method="POST">
     <div>
-        <label for="email">Email</label>
-        <input type="email" name="email" id="email" required>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" required>
     </div>
     <div>
-        <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
+      <label for="password">Password</label>
+      <input type="password" name="password" id="password" required>
     </div>
     <button type="submit">Login</button>
-</form>
-<a href="/register">Register</a>
->>>>>>> d51973951377440cae97ed053d58ae4669e12145
+  </form>
+  <a href="/register">Register</a>
+  >>>>>>> d51973951377440cae97ed053d58ae4669e12145 --}}
