@@ -1,0 +1,113 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New suburb</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/suburb/">suburb</a> / 
+		<a href="#">New suburb</a>
+	</div>
+	<div id="suburb_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">Suburb Name :</span><input class="w3-input w3-border data-textbox" name="SuburbName" id="SuburbName" placeholder="Suburb Name" title="Suburb Name" maxlength="200" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">City :</span><select class='w3-input w3-border data-textbox' id='CityID' name='CityID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadAsuburb">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/suburb/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewsuburb()" title="Add New suburb"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewsuburb()
+	{
+		var dataReq=new Object();
+		dataReq.SuburbName=ItemValue("SuburbName");
+		dataReq.CityID=ItemValue("CityID");
+
+		if( dataReq.SuburbName == "")
+		{
+			showMessage("Enter a value for Suburb Name",'Error',ShowButton);
+		}
+		else if( dataReq.CityID == "")
+		{
+			showMessage("Enter a value for City ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAsuburb").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/suburb",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_suburb_Response
+		);
+	}
+}
+
+ function add_suburb_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/suburb/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAsuburb").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/city/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#CityID").append("<option value=\"" + cmbVal.CityID + "\">" + cmbVal.CityName + "</option>")
+		}
+	  }
+	});
+
+</script>

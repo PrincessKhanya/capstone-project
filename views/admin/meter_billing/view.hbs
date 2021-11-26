@@ -1,0 +1,110 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter_billing/">meter_billing</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="meter_billing_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="MeterBillingID" id="MeterBillingID" value="<?php echo $meter_billingInfo->MeterBillingID; ?>" readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Units Purchased :</span><input class="w3-input w3-border data-textbox" name="UnitsPurchased" id="UnitsPurchased" placeholder="Units Purchased" title="Units Purchased" value="" type="number"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Amount Used :</span><input class="w3-input w3-border data-textbox" name="AmountUsed" id="AmountUsed" placeholder="Amount Used" title="Amount Used" value="" type="number"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Date Of Purchase :</span><input class="w3-input w3-border data-textbox" name="DateOfPurchase" id="DateOfPurchase" placeholder="Date Of Purchase" title="Date Of Purchase" value="" type="date"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Date Of Usage :</span><input class="w3-input w3-border data-textbox" name="DateOfUsage" id="DateOfUsage" placeholder="Date Of Usage" title="Date Of Usage" value="" type="date"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Voucher No :</span><input class="w3-input w3-border data-textbox" name="VoucherNo" id="VoucherNo" placeholder="Voucher No" title="Voucher No" maxlength="50" value=""  readonly=''/>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter :</span><select class='w3-input w3-border data-textbox' id='MeterID' name='MeterID' readonly=''></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadVmeter_billing">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = 'admin/meter_billing/'" title="Back"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+
+	function ShowButton()
+	{
+		$("#loadVmeter_billing").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/meter/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#MeterID").append("<option value=\"" + cmbVal.MeterID + "\">" + cmbVal.MeterGUID + "</option>")
+		}
+	  }
+	});
+
+$("#loadVmeter_billing").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/meter_billing/{{MeterBillingID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load meter_billing record", "error", () => { document.location = "/admin/meter_billing/" });
+			}
+		});
+</script>

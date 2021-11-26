@@ -1,218 +1,163 @@
-const express=require("express");
-const exphbs = require("express-handlebars");
-const bodyParser=require("body-parser");
-const session=require('express-session') 
-//const Calender = require("./calendar");
-
+const express = require("express");
 const app = express();
-//const calendar=Calender();
+const path = require("path");
+const cookieParser = require("cookie-parser");
+const bodyParser = require("body-parser");
+const { engine } = require("express-handlebars");
 
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: true
-  }))
+const Connection = require("./modules/DataConnect");
 
-const users=[];
+const PORT = process.env.PORT || 8081;
+require("dotenv").config();
 
-app.engine("handlebars",exphbs({
-    partialsDir: "./views/partials",
-    viewPath:  './views',
-    layoutsDir : './views/layouts'
-}));
+app.use(express.json());
+//app.use(express.urlencoded());
 
-app.set("view engine","handlebars"
+app.set("view engine", "hbs");
+app.engine(
+  "hbs",
+  engine({
+    extname: "hbs",
+    defaultLayout: "layout",
+    layoutsDi: __dirname + "/views/layouts/",
+  })
 );
+app.set("views", path.join(__dirname, "views"));
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(cookieParser());
+/*app.use("/api/province", require("./routes/api_common/province"));
+app.use("/api/city", require("./routes/api_common/city"));
+app.use("/api/suburb", require("./routes/api_common/suburb"));*/
 
-app.use(bodyParser.json())
+app.use("/api/login", require("./routes/api_common/login"));
+app.use("/api/register", require("./routes/api_common/register"));
 
-app.get("/", function (req, res) {
-    res.render('index.handlebars'
-    // , { user: req.user }
-    );
+// Admin Routes
+
+app.get("/", (req, res) => {
+  res.render("index", { title: "Home Page", condition: false });
+});
+
+app.get("/about/", (req, res) => {
+  res.render("common/about", { title: "About", condition: false });
+});
+
+app.get("/register/", (req, res) => {
+  res.render("register", { title: "Register Account", condition: false });
+});
+
+app.get("/admin/", (req, res) => {
+  res.render("admin/index", { title: "Admin Panel", condition: false });
+});
+
+app.get("/meter_usage/", (req, res) => {
+  res.render("common/meter_usage", { title: "Meter Usage", condition: false });
+});
+
+app.get("/meter_billing/", (req, res) => {
+  res.render("common/meter_billing", {
+    title: "Meter Billing",
+    condition: false,
   });
-  
-  // const isLoggedIn=async (req, res, next) => {
-  //   // console.log(req.cookies);
-  //   if( req.cookies.jwt) {
-  //     try {
-  //       //1) verify the token
-  //       const decoded = await promisify(jwt.verify)(req.cookies.jwt,
-  //       process.env.JWT_SECRET
-  //       );
-  
-  //       console.log(decoded);
-  
-  //       //2) Check if the user still exists
-  //       db.query('SELECT * FROM users WHERE id = ?', [decoded.id], (error, result) => {
-  //         console.log(result);
-  
-  //         if(!result) {
-  //           return next();
-  //         }
-  
-  //         req.user = result[0];
-  //         console.log("user is")
-  //         console.log(req.user);
-  //         return next();
-  
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //       return next();
-  //     }
-  //   } else {
-  //     next();
-  //   }
-  // }
-  
-  app.get("/login", function (req, res) {
-    res.render('login.handlebars');
-  
-  });
-  
-  app.post("/login", async function (req, res) {
-    try {
-      const { email, password } = req.body;
-  
-      if (!email || !password) {
-        return res.status(400).render('login', {
-          message: 'Please provide an email and password'
-        })
-      }
-  
-      db.query('SELECT * FROM users WHERE email = ?', [email], async (error, results) => {
-        console.log(results);
-        if (!results || !(await bcrypt.compare(password, results[0].password))) {
-          res.status(401).render('login', {
-            message: 'Email or Password is incorrect'
-          })
-        } else {
-          const id = results[0].id;
-  
-          const token = jwt.sign({ id }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRES_IN
-          });
-  
-          console.log("The token is: " + token);
-  
-          const cookieOptions = {
-            expires: new Date(
-              Date.now() + process.env.JWT_COOKIE_EXPIRES * 24 * 60 * 60 * 1000
-            ),
-            httpOnly: true
-          }
-  
-          res.cookie('jwt', token, cookieOptions);
-          res.status(200).redirect("/");
-        }
-  
-      })
-  
-    } catch (error) {
-      console.log(error);
+});
+
+app.use("/api/meter_usage", require("./routes/api_common/meter_usage"));
+app.use("/api/meter_billing", require("./routes/api_common/meter_billing"));
+
+app.get("/dashboard/", (req, res) => {
+  let userID = 1;
+
+  let dashSql = `
+  SELECT 
+  IFNULL( (SELECT meter_usage.CurrentUsage 
+  FROM meter_usage 
+  INNER JOIN meter_user ON meter_usage.MeterID=meter_user.MeterID 
+  WHERE meter_user.UserID=${userID} ORDER BY meter_usage.UsageDate DESC LIMIT 1),0) AS 'usage',
+
+  IFNULL( (SELECT CONCAT(UnitsPurchased,' Units - ', 'for  R ',AmountUsed,' - ',DATE_FORMAT(DateOfPurchase,'%d %M %Y'))
+  FROM meter_billing 
+  INNER JOIN meter_user ON meter_billing.MeterID=meter_user.MeterID 
+  WHERE meter_user.UserID=${userID} ORDER BY meter_billing.DateOfPurchase DESC LIMIT 1),'No billing') AS 'billing',
+
+  IFNULL((SELECT SettingValue from app_settings WHERE  SettingName='load_shedding_stage' LIMIT 1),0) as 'loadshedding'`;
+  let con = Connection.NewConnection();
+
+  con.connect(function (err) {
+    if (err) {
+      res.status(404).send("Not found");
+      return;
     }
-  
-    req.session.name=req.body.name;
-    res.redirect("/dashboard")
-  
-  });
-  
-  app.get("/register", function (req, res) {
-    res.render('register.handlebars');
-  });
-  
-  app.post("/register", function (req, res) {
-  
-    console.log(req.body);
-    const name = req.body.name;
-    const email = req.body.email;
-    const meterNumber = req.body.meterNumber;
-    const address = req.body.address;
-    const password = req.body.password;
-    const passwordConfirm = req.body.passwordConfirm;
-  
-    db.query('SELECT email FROM user WHERE email = ?', [email], async (error, results) => {
-      if (error) {
-        console.log(error)
-      }
-  
-      if (results.length > 0) {
-        return res.render('register', {
-          message: "That email is already in use"
-        });
-      } else if (password !== passwordConfirm) {
-        return res.render('register', {
-          message: "Passwords do not match"
+
+    con.query(dashSql, function (err, result, fields) {
+      if (err) {
+        res.status(404).send("Not found");
+      } else {
+        let dashValue = result[0];
+
+        res.render("common/dashboard", {
+          title: "Dashboard Panel",
+          dashData: {
+            usage: dashValue.usage,
+            loadshedding:
+              parseInt(dashValue.loadshedding) > 0
+                ? "Load Shedding Stage " + dashValue.loadshedding
+                : "No load Shedding",
+            billing: dashValue.billing,
+          },
+          condition: false,
         });
       }
-  
-      let hashedPassword = await bcrypt.hash(password, 8);
-  
-      console.log(hashedPassword);
-  
-      db.query('INSERT INTO user SET ? ', { name: name, email: email, meterNumber: meterNumber, address: address, password: hashedPassword }, (error, results) => {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log(results)
-          return res.render('register', {
-            message: "User registered"
-          }), res.redirect('/login');
-        }
-      })
+      con.end();
     });
   });
-  
-  
-  app.get("/dashboard", function (req, res) {
-    res.render('dashboard');
-    // console.log(req.user);
-    // if (req.user) {
-    //   res.render('profile', {
-    //     user: req.user
-    //   });
-    // } else {
-    //   res.redirect('/dashboard');
-    // }
-  });
-  
-app.post("/bill", function(req,res){
-    console.log(req.body)
-
 });
 
-app.get("/bill", function(req,res){
-    res.render('bill');
-});
-  
-app.post("/loadsheding", function(req,res){
-    console.log(req.body)
+// admin view + api routes
+app.use("/api/admin/app_settings", require("./routes/api_admin/app_settings"));
+app.use("/admin/app_settings", require("./routes/view_admin/app_settings"));
 
-});
+app.use("/api/admin/city", require("./routes/api_admin/city"));
+app.use("/admin/city", require("./routes/view_admin/city"));
 
-app.get("/loadsheding", function(req,res){
-    res.render('loadsheding');
-});
+app.use("/api/admin/loadshedding", require("./routes/api_admin/loadshedding"));
+app.use("/admin/loadshedding", require("./routes/view_admin/loadshedding"));
 
-app.post("/usage", function(req,res){
-    console.log(req.body)
+app.use(
+  "/api/admin/loadshedding_subscription",
+  require("./routes/api_admin/loadshedding_subscription")
+);
+app.use(
+  "/admin/loadshedding_subscription",
+  require("./routes/view_admin/loadshedding_subscription")
+);
 
-});
-app.get("/usage", function(req,res){
-    res.render('usage')
+app.use("/api/admin/meter", require("./routes/api_admin/meter"));
+app.use("/admin/meter", require("./routes/view_admin/meter"));
 
-});
+app.use(
+  "/api/admin/meter_billing",
+  require("./routes/api_admin/meter_billing")
+);
+app.use("/admin/meter_billing", require("./routes/view_admin/meter_billing"));
 
+app.use("/api/admin/meter_usage", require("./routes/api_admin/meter_usage"));
+app.use("/admin/meter_usage", require("./routes/view_admin/meter_usage"));
 
+app.use("/api/admin/meter_user", require("./routes/api_admin/meter_user"));
+app.use("/admin/meter_user", require("./routes/view_admin/meter_user"));
 
+app.use("/api/admin/province", require("./routes/api_admin/province"));
+app.use("/admin/province", require("./routes/view_admin/province"));
 
-const PORT = process.env.PORT|| 9000
+app.use("/api/admin/suburb", require("./routes/api_admin/suburb"));
+app.use("/admin/suburb", require("./routes/view_admin/suburb"));
 
-app.listen(PORT,function(){
-    console.log("App started at port:", PORT)
-});
+app.use("/api/admin/user_type", require("./routes/api_admin/user_type"));
+app.use("/admin/user_type", require("./routes/view_admin/user_type"));
+
+app.use("/api/admin/users", require("./routes/api_admin/users"));
+app.use("/admin/users", require("./routes/view_admin/users"));
+
+app.listen(PORT);

@@ -1,0 +1,177 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/loadshedding/">loadshedding</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="loadshedding_form" class="formstyle">
+		<div class="form-data">
+			<span class="label-check w3-border-red">Shedding GUID :</span><input class="w3-input w3-border data-textbox" name="SheddingGUID" id="SheddingGUID" placeholder="Shedding GUID" title="Shedding GUID" maxlength="64" value="" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Stage :</span><input class="w3-input w3-border data-textbox" name="Stage" id="Stage" placeholder="Stage" title="Stage" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Shedding Date :</span><input class="w3-input w3-border data-textbox" name="SheddingDate" id="SheddingDate" placeholder="Shedding Date" title="Shedding Date" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Start Time :</span><input class="w3-input w3-border data-textbox" name="StartTime" id="StartTime" placeholder="Start Time" title="Start Time" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">End Time :</span><input class="w3-input w3-border data-textbox" name="EndTime" id="EndTime" placeholder="End Time" title="End Time" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Suburb :</span><select class='w3-input w3-border data-textbox' id='SuburbID' name='SuburbID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadEloadshedding">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/loadshedding/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEditloadshedding()" title="Save loadshedding"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEditloadshedding()
+	{
+		var dataReq=new Object();
+		dataReq.SheddingGUID=ItemValue("SheddingGUID");
+		dataReq.Stage=ItemValue("Stage");
+		dataReq.SheddingDate=ItemValue("SheddingDate");
+		dataReq.StartTime=ItemValue("StartTime");
+		dataReq.EndTime=ItemValue("EndTime");
+		dataReq.SuburbID=ItemValue("SuburbID");
+
+		if( dataReq.SheddingGUID == "" )
+		{
+			showMessage("Enter a value for Shedding GUID",'Error',ShowButton);
+		}
+		else if( dataReq.Stage == "" )
+		{
+			showMessage("Enter a value for Stage",'Error',ShowButton);
+		}
+		else if( dataReq.SheddingDate == "" )
+		{
+			showMessage("Enter a value for Shedding Date",'Error',ShowButton);
+		}
+		else if( dataReq.StartTime == "" )
+		{
+			showMessage("Enter a value for Start Time",'Error',ShowButton);
+		}
+		else if( dataReq.EndTime == "" )
+		{
+			showMessage("Enter a value for End Time",'Error',ShowButton);
+		}
+		else if( dataReq.SuburbID == "" )
+		{
+			showMessage("Enter a value for Suburb ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEloadshedding").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/loadshedding",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_loadshedding_Response
+		);
+
+		}
+	}
+
+ function edit_loadshedding_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/loadshedding/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEloadshedding").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/suburb/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#SuburbID").append("<option value=\"" + cmbVal.SuburbID + "\">" + cmbVal.SuburbName + "</option>")
+		}
+	  }
+	});
+
+$("#loadEloadshedding").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/loadshedding/{{SheddingGUID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load loadshedding record", "error", () => { document.location = "/admin/loadshedding/" });
+			}
+		});
+</script>

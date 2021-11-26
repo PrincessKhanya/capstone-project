@@ -1,0 +1,136 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/app_settings/">app_settings</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="app_settings_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="SettingID" id="SettingID" value="<?php echo $app_settingsInfo->SettingID; ?>"/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Setting Name :</span><input class="w3-input w3-border data-textbox" name="SettingName" id="SettingName" placeholder="Setting Name" title="Setting Name" maxlength="100" value="" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Setting Value :</span><textarea class="w3-input w3-border " name="SettingValue" id="SettingValue" placeholder="Setting Value" title="Setting Value" maxlength="500" ></textarea>
+		</div>
+
+		<div class="loading" style="display:none" id="loadEapp_settings">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/app_settings/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEditapp_settings()" title="Save app_settings"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEditapp_settings()
+	{
+		var dataReq=new Object();
+		dataReq.SettingID=ItemValue("SettingID");
+		dataReq.SettingName=ItemValue("SettingName");
+		dataReq.SettingValue=ItemValue("SettingValue");
+
+		if( dataReq.SettingID == "" )
+		{
+			showMessage("Enter a value for Setting ID",'Error',ShowButton);
+		}
+		else if( dataReq.SettingName == "" )
+		{
+			showMessage("Enter a value for Setting Name",'Error',ShowButton);
+		}
+		else if( dataReq.SettingValue == "" )
+		{
+			showMessage("Enter a value for Setting Value",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEapp_settings").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/app_settings",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_app_settings_Response
+		);
+
+		}
+	}
+
+ function edit_app_settings_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/app_settings/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEapp_settings").hide();
+		$(".form-data").show();
+	}
+
+
+$("#loadEapp_settings").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/app_settings/{{SettingID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load app_settings record", "error", () => { document.location = "/admin/app_settings/" });
+			}
+		});
+</script>

@@ -1,0 +1,150 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/city/">city</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="city_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="CityID" id="CityID" value="<?php echo $cityInfo->CityID; ?>"/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">City Name :</span><input class="w3-input w3-border data-textbox" name="CityName" id="CityName" placeholder="City Name" title="City Name" maxlength="200" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Province :</span><select class='w3-input w3-border data-textbox' id='ProvinceID' name='ProvinceID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadEcity">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/city/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEditcity()" title="Save city"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEditcity()
+	{
+		var dataReq=new Object();
+		dataReq.CityID=ItemValue("CityID");
+		dataReq.CityName=ItemValue("CityName");
+		dataReq.ProvinceID=ItemValue("ProvinceID");
+
+		if( dataReq.CityID == "" )
+		{
+			showMessage("Enter a value for City ID",'Error',ShowButton);
+		}
+		else if( dataReq.CityName == "" )
+		{
+			showMessage("Enter a value for City Name",'Error',ShowButton);
+		}
+		else if( dataReq.ProvinceID == "" )
+		{
+			showMessage("Enter a value for Province ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEcity").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/city",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_city_Response
+		);
+
+		}
+	}
+
+ function edit_city_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/city/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEcity").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/province/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#ProvinceID").append("<option value=\"" + cmbVal.ProvinceID + "\">" + cmbVal.ProvinceName + "</option>")
+		}
+	  }
+	});
+
+$("#loadEcity").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/city/{{CityID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load city record", "error", () => { document.location = "/admin/city/" });
+			}
+		});
+</script>

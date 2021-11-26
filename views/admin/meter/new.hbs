@@ -1,0 +1,135 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New meter</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter/">meter</a> / 
+		<a href="#">New meter</a>
+	</div>
+	<div id="meter_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter GUID :</span><input class="w3-input w3-border data-textbox" name="MeterGUID" id="MeterGUID" placeholder="Meter GUID" title="Meter GUID" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter No :</span><input class="w3-input w3-border data-textbox" name="MeterNo" id="MeterNo" placeholder="Meter No" title="Meter No" maxlength="30" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">ID Number :</span><input class="w3-input w3-border data-textbox" name="IDNumber" id="IDNumber" placeholder="ID Number" title="ID Number" maxlength="13" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Passport Number :</span><input class="w3-input w3-border data-textbox" name="PassportNumber" id="PassportNumber" placeholder="Passport Number" title="Passport Number" maxlength="25" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Reg Name :</span><input class="w3-input w3-border data-textbox" name="RegName" id="RegName" placeholder="Reg Name" title="Reg Name" maxlength="100" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Reg Last Name :</span><input class="w3-input w3-border data-textbox" name="RegLastName" id="RegLastName" placeholder="Reg Last Name" title="Reg Last Name" maxlength="100" value="" />
+		</div>
+
+		<div class="loading" style="display:none" id="loadAmeter">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/meter/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewmeter()" title="Add New meter"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewmeter()
+	{
+		var dataReq=new Object();
+		dataReq.MeterGUID=ItemValue("MeterGUID");
+		dataReq.MeterNo=ItemValue("MeterNo");
+		dataReq.IDNumber=ItemValue("IDNumber");
+		dataReq.PassportNumber=ItemValue("PassportNumber");
+		dataReq.RegName=ItemValue("RegName");
+		dataReq.RegLastName=ItemValue("RegLastName");
+
+		if( dataReq.MeterGUID == "")
+		{
+			showMessage("Enter a value for Meter GUID",'Error',ShowButton);
+		}
+		else if( dataReq.MeterNo == "")
+		{
+			showMessage("Enter a value for Meter No",'Error',ShowButton);
+		}
+		else if( dataReq.IDNumber == "")
+		{
+			showMessage("Enter a value for ID Number",'Error',ShowButton);
+		}
+		else if( dataReq.PassportNumber == "")
+		{
+			showMessage("Enter a value for Passport Number",'Error',ShowButton);
+		}
+		else if( dataReq.RegName == "")
+		{
+			showMessage("Enter a value for Reg Name",'Error',ShowButton);
+		}
+		else if( dataReq.RegLastName == "")
+		{
+			showMessage("Enter a value for Reg Last Name",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAmeter").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/meter",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_meter_Response
+		);
+	}
+}
+
+ function add_meter_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/meter/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAmeter").hide();
+		$(".form-data").show();
+	}
+
+
+</script>

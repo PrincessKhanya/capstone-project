@@ -1,0 +1,186 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/users/">users</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="users_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="UserID" id="UserID" value="<?php echo $usersInfo->UserID; ?>"/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">User GUID :</span><input class="w3-input w3-border data-textbox" name="UserGUID" id="UserGUID" placeholder="User GUID" title="User GUID" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Full Name :</span><input class="w3-input w3-border data-textbox" name="FullName" id="FullName" placeholder="Full Name" title="Full Name" maxlength="100" value="" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">User Cell No :</span><input class="w3-input w3-border data-textbox" name="UserCellNo" id="UserCellNo" placeholder="User Cell No" title="User Cell No" maxlength="13" value="" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">User Password :</span><input class="w3-input w3-border data-textbox" name="UserPassword" id="UserPassword" placeholder="User Password" title="User Password" maxlength="64" value="" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Date Registered :</span><input class="w3-input w3-border data-textbox" name="DateRegistered" id="DateRegistered" placeholder="Date Registered" title="Date Registered" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">User Type :</span><select class='w3-input w3-border data-textbox' id='UserTypeID' name='UserTypeID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadEusers">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/users/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEditusers()" title="Save users"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEditusers()
+	{
+		var dataReq=new Object();
+		dataReq.UserID=ItemValue("UserID");
+		dataReq.UserGUID=ItemValue("UserGUID");
+		dataReq.FullName=ItemValue("FullName");
+		dataReq.UserCellNo=ItemValue("UserCellNo");
+		dataReq.UserPassword=ItemValue("UserPassword");
+		dataReq.DateRegistered=ItemValue("DateRegistered");
+		dataReq.UserTypeID=ItemValue("UserTypeID");
+
+		if( dataReq.UserID == "" )
+		{
+			showMessage("Enter a value for User ID",'Error',ShowButton);
+		}
+		else if( dataReq.UserGUID == "" )
+		{
+			showMessage("Enter a value for User GUID",'Error',ShowButton);
+		}
+		else if( dataReq.FullName == "" )
+		{
+			showMessage("Enter a value for Full Name",'Error',ShowButton);
+		}
+		else if( dataReq.UserCellNo == "" )
+		{
+			showMessage("Enter a value for User Cell No",'Error',ShowButton);
+		}
+		else if( dataReq.UserPassword == "" )
+		{
+			showMessage("Enter a value for User Password",'Error',ShowButton);
+		}
+		else if( dataReq.DateRegistered == "" )
+		{
+			showMessage("Enter a value for Date Registered",'Error',ShowButton);
+		}
+		else if( dataReq.UserTypeID == "" )
+		{
+			showMessage("Enter a value for User Type ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEusers").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/users",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_users_Response
+		);
+
+		}
+	}
+
+ function edit_users_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/users/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEusers").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/user_type/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#UserTypeID").append("<option value=\"" + cmbVal.UserTypeID + "\">" + cmbVal.UserTypeName + "</option>")
+		}
+	  }
+	});
+
+$("#loadEusers").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/users/{{UserID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load users record", "error", () => { document.location = "/admin/users/" });
+			}
+		});
+</script>

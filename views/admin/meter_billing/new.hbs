@@ -1,0 +1,149 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New meter_billing</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter_billing/">meter_billing</a> / 
+		<a href="#">New meter_billing</a>
+	</div>
+	<div id="meter_billing_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">Units Purchased :</span><input class="w3-input w3-border data-textbox" name="UnitsPurchased" id="UnitsPurchased" placeholder="Units Purchased" title="Units Purchased" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Amount Used :</span><input class="w3-input w3-border data-textbox" name="AmountUsed" id="AmountUsed" placeholder="Amount Used" title="Amount Used" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Date Of Purchase :</span>		<input class="w3-input w3-border data-textbox" name="DateOfPurchase" id="DateOfPurchase" placeholder="Date Of Purchase" title="Date Of Purchase" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Date Of Usage :</span>		<input class="w3-input w3-border data-textbox" name="DateOfUsage" id="DateOfUsage" placeholder="Date Of Usage" title="Date Of Usage" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Voucher No :</span><input class="w3-input w3-border data-textbox" name="VoucherNo" id="VoucherNo" placeholder="Voucher No" title="Voucher No" maxlength="50" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter :</span><select class='w3-input w3-border data-textbox' id='MeterID' name='MeterID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadAmeter_billing">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/meter_billing/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewmeter_billing()" title="Add New meter_billing"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewmeter_billing()
+	{
+		var dataReq=new Object();
+		dataReq.UnitsPurchased=ItemValue("UnitsPurchased");
+		dataReq.AmountUsed=ItemValue("AmountUsed");
+		dataReq.DateOfPurchase=ItemValue("DateOfPurchase");
+		dataReq.DateOfUsage=ItemValue("DateOfUsage");
+		dataReq.VoucherNo=ItemValue("VoucherNo");
+		dataReq.MeterID=ItemValue("MeterID");
+
+		if( dataReq.UnitsPurchased == "")
+		{
+			showMessage("Enter a value for Units Purchased",'Error',ShowButton);
+		}
+		else if( dataReq.AmountUsed == "")
+		{
+			showMessage("Enter a value for Amount Used",'Error',ShowButton);
+		}
+		else if( dataReq.DateOfPurchase == "")
+		{
+			showMessage("Enter a value for Date Of Purchase",'Error',ShowButton);
+		}
+		else if( dataReq.DateOfUsage == "")
+		{
+			showMessage("Enter a value for Date Of Usage",'Error',ShowButton);
+		}
+		else if( dataReq.VoucherNo == "")
+		{
+			showMessage("Enter a value for Voucher No",'Error',ShowButton);
+		}
+		else if( dataReq.MeterID == "")
+		{
+			showMessage("Enter a value for Meter ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAmeter_billing").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/meter_billing",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_meter_billing_Response
+		);
+	}
+}
+
+ function add_meter_billing_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/meter_billing/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAmeter_billing").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/meter/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#MeterID").append("<option value=\"" + cmbVal.MeterID + "\">" + cmbVal.MeterGUID + "</option>")
+		}
+	  }
+	});
+
+</script>

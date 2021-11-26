@@ -1,0 +1,90 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New user_type</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/user_type/">user_type</a> / 
+		<a href="#">New user_type</a>
+	</div>
+	<div id="user_type_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">User Type Name :</span><input class="w3-input w3-border data-textbox" name="UserTypeName" id="UserTypeName" placeholder="User Type Name" title="User Type Name" maxlength="50" value="" />
+		</div>
+
+		<div class="loading" style="display:none" id="loadAuser_type">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/user_type/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewuser_type()" title="Add New user_type"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewuser_type()
+	{
+		var dataReq=new Object();
+		dataReq.UserTypeName=ItemValue("UserTypeName");
+
+		if( dataReq.UserTypeName == "")
+		{
+			showMessage("Enter a value for User Type Name",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAuser_type").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/user_type",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_user_type_Response
+		);
+	}
+}
+
+ function add_user_type_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/user_type/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAuser_type").hide();
+		$(".form-data").show();
+	}
+
+
+</script>

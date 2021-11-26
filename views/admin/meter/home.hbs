@@ -1,0 +1,161 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1">
+		<a href="/admin/">Home</a> /
+		<a href="#">{{ title }}</a>
+	</div>
+	<div class="loading" style="" id="loadM_meter">
+		<div class="smallload">
+			<div class="neca-anim-fast-fade ">
+				<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+			</div>
+			<div>
+				Please wait..
+			</div>
+		</div>
+	</div>
+
+	<div id='meterControl'>
+		<div class='top-set w3-padding'>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-home fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/'" title="Home"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-plus fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/meter/new'" title="New meter"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-sync-alt fa-2x w3-margin-left w3-margin-top"
+				onclick="refreshmeter()" title="refresh meter"></button>
+		</div>
+
+		<div class="w3-padding display-box" id="meterDataList">
+
+		</div>
+
+
+	</div>
+
+
+</div>
+
+<script>
+
+
+
+	function refreshmeter() 
+{
+		hidemeterData();
+
+		$("#meterDataList").html("No Data");
+		getJsonData(null, "/api/admin/meter/list",
+			(err) => {
+				errorMsg = "Connection Problem: Error 1";
+				if (err) {
+					if (err.status && err.status == 400 && err.responseText) {
+						errorMsg = err.responseText;
+					}
+				}
+				showMessage(errorMsg, 'Error', showmeterData);
+
+			},
+
+			(result) => {
+				$("#meterDataList").html("");
+				if (result.key && result.data && result.show) {
+					let showData = Object.keys(result.show);
+
+					if (showData.length > 0 && result.data.length > 0) {
+
+						for (let i = 0; i < result.data.length; i++) {
+
+							let row = result.data[i];
+							let Display = "<div class='display-item w3-border w3-border-gray w3-card' data-key='" + row[result.key] + "'>";
+
+							for (let j = 0; j < showData.length; j++) {
+								let k = showData[j];
+
+								Display += "<div class='display-item-value'> " + result.show[k] + " - " + row[k] + "</div>"
+							}
+
+							Display += "<div class='display-item-buttons w3-right-align '><button class='w3-button w3-indigo onmeterUpdate'><i class='fa fa-pen'></i></button> <button class='w3-button w3-indigo onmeterDelete'><i class='fa fa-trash'></i></button></div>"
+							Display += "</div>";
+							$("#meterDataList").append(Display);
+							Display = "";
+
+
+						}
+
+						$(".onmeterUpdate").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							document.location = "/admin/meter/edit/" + parentKey;
+						});
+
+
+						$(".onmeterDelete").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							hidemeterData();
+
+
+							deleteJsonData({}, "/api/admin/meter/" + parentKey,
+
+
+								(delError) => {
+									errorMsgDel = "Connection Problem: Error 1";
+									if (delError) {
+										if (delError.status && delError.status == 400 && delError.responseText) {
+											errorMsgDel = delError.responseText;
+										}
+									}
+									showMessage(errorMsgDel, 'Error', showmeterData);
+
+								},
+								(result) => {
+									var jResponse = result;
+
+									if (jResponse.status == '1') {
+										showMessage(jResponse.message, 'Success', function () { refreshmeter(); showmeterData() });
+
+									}
+									else {
+										showMessage(jResponse.message, 'Error', showmeterData);
+									}
+
+								});
+
+						});
+
+
+					}
+
+				}
+
+				showmeterData();
+			});
+
+	}
+
+	function hidemeterData()
+ {
+		$("#meterControl").hide();
+		$(".loading").show();
+	}
+
+	function showmeterData() 
+{
+		$("#meterControl").show();
+		$(".loading").hide();
+	}
+
+
+
+	refreshmeter();
+
+
+
+</script>

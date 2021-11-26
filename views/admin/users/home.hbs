@@ -1,0 +1,161 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1">
+		<a href="/admin/">Home</a> /
+		<a href="#">{{ title }}</a>
+	</div>
+	<div class="loading" style="" id="loadM_users">
+		<div class="smallload">
+			<div class="neca-anim-fast-fade ">
+				<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+			</div>
+			<div>
+				Please wait..
+			</div>
+		</div>
+	</div>
+
+	<div id='usersControl'>
+		<div class='top-set w3-padding'>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-home fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/'" title="Home"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-plus fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/users/new'" title="New users"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-sync-alt fa-2x w3-margin-left w3-margin-top"
+				onclick="refreshusers()" title="refresh users"></button>
+		</div>
+
+		<div class="w3-padding display-box" id="usersDataList">
+
+		</div>
+
+
+	</div>
+
+
+</div>
+
+<script>
+
+
+
+	function refreshusers() 
+{
+		hideusersData();
+
+		$("#usersDataList").html("No Data");
+		getJsonData(null, "/api/admin/users/list",
+			(err) => {
+				errorMsg = "Connection Problem: Error 1";
+				if (err) {
+					if (err.status && err.status == 400 && err.responseText) {
+						errorMsg = err.responseText;
+					}
+				}
+				showMessage(errorMsg, 'Error', showusersData);
+
+			},
+
+			(result) => {
+				$("#usersDataList").html("");
+				if (result.key && result.data && result.show) {
+					let showData = Object.keys(result.show);
+
+					if (showData.length > 0 && result.data.length > 0) {
+
+						for (let i = 0; i < result.data.length; i++) {
+
+							let row = result.data[i];
+							let Display = "<div class='display-item w3-border w3-border-gray w3-card' data-key='" + row[result.key] + "'>";
+
+							for (let j = 0; j < showData.length; j++) {
+								let k = showData[j];
+
+								Display += "<div class='display-item-value'> " + result.show[k] + " - " + row[k] + "</div>"
+							}
+
+							Display += "<div class='display-item-buttons w3-right-align '><button class='w3-button w3-indigo onusersUpdate'><i class='fa fa-pen'></i></button> <button class='w3-button w3-indigo onusersDelete'><i class='fa fa-trash'></i></button></div>"
+							Display += "</div>";
+							$("#usersDataList").append(Display);
+							Display = "";
+
+
+						}
+
+						$(".onusersUpdate").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							document.location = "/admin/users/edit/" + parentKey;
+						});
+
+
+						$(".onusersDelete").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							hideusersData();
+
+
+							deleteJsonData({}, "/api/admin/users/" + parentKey,
+
+
+								(delError) => {
+									errorMsgDel = "Connection Problem: Error 1";
+									if (delError) {
+										if (delError.status && delError.status == 400 && delError.responseText) {
+											errorMsgDel = delError.responseText;
+										}
+									}
+									showMessage(errorMsgDel, 'Error', showusersData);
+
+								},
+								(result) => {
+									var jResponse = result;
+
+									if (jResponse.status == '1') {
+										showMessage(jResponse.message, 'Success', function () { refreshusers(); showusersData() });
+
+									}
+									else {
+										showMessage(jResponse.message, 'Error', showusersData);
+									}
+
+								});
+
+						});
+
+
+					}
+
+				}
+
+				showusersData();
+			});
+
+	}
+
+	function hideusersData()
+ {
+		$("#usersControl").hide();
+		$(".loading").show();
+	}
+
+	function showusersData() 
+{
+		$("#usersControl").show();
+		$(".loading").hide();
+	}
+
+
+
+	refreshusers();
+
+
+
+</script>

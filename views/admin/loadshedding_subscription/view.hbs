@@ -1,0 +1,112 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/loadshedding_subscription/">loadshedding_subscription</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="loadshedding_subscription_form" class="formstyle">
+		<div class="form-data">
+			<span class="label-check w3-border-red">Shedding GUID :</span><input class="w3-input w3-border data-textbox" name="SheddingGUID" id="SheddingGUID" placeholder="Shedding GUID" title="Shedding GUID" maxlength="64" value=""  readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Date Added :</span><input class="w3-input w3-border data-textbox" name="DateAdded" id="DateAdded" placeholder="Date Added" title="Date Added" value="" type="date"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Suburb :</span><select class='w3-input w3-border data-textbox' id='SuburbID' name='SuburbID' readonly=''></select>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Users :</span><select class='w3-input w3-border data-textbox' id='UserID' name='UserID' readonly=''></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadVloadshedding_subscription">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = 'admin/loadshedding_subscription/'" title="Back"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+
+	function ShowButton()
+	{
+		$("#loadVloadshedding_subscription").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/suburb/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#SuburbID").append("<option value=\"" + cmbVal.SuburbID + "\">" + cmbVal.SuburbName + "</option>")
+		}
+	  }
+	});
+
+
+	getJsonData(null, "/api/admin/users/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#UserID").append("<option value=\"" + cmbVal.UserID + "\">" + cmbVal.UserGUID + "</option>")
+		}
+	  }
+	});
+
+$("#loadVloadshedding_subscription").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/loadshedding_subscription/{{SheddingGUID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load loadshedding_subscription record", "error", () => { document.location = "/admin/loadshedding_subscription/" });
+			}
+		});
+</script>

@@ -1,0 +1,36 @@
+
+.sc-web-dialog{
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width: 100%;
+    background: rgba(0,0,0,0.4);
+    z-index: 9999999;
+    overflow: scroll;
+}
+.sc-web-transwhite{
+  background: rgba(100,100,100,0.7);
+}
+
+.sc-web-dialog-window{
+
+    max-width: 60%;
+    min-width: 250px;
+    border-radius: 5px;
+    background:#FFF;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top:5%;
+    margin-bottom:5%;
+    border: 5px solid #333;
+}
+
+.sc-web-dialog-title{
+    background:#333;
+    color:#FFF;
+    padding:15px;
+    text-align: center;
+    font-size: 18px;
+    font-weight: bold;
+}

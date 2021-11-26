@@ -1,0 +1,145 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New loadshedding_subscription</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/loadshedding_subscription/">loadshedding_subscription</a> / 
+		<a href="#">New loadshedding_subscription</a>
+	</div>
+	<div id="loadshedding_subscription_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">Shedding GUID :</span><input class="w3-input w3-border data-textbox" name="SheddingGUID" id="SheddingGUID" placeholder="Shedding GUID" title="Shedding GUID" maxlength="64" value="" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Date Added :</span>		<input class="w3-input w3-border data-textbox" name="DateAdded" id="DateAdded" placeholder="Date Added" title="Date Added" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Suburb :</span><select class='w3-input w3-border data-textbox' id='SuburbID' name='SuburbID'></select>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Users :</span><select class='w3-input w3-border data-textbox' id='UserID' name='UserID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadAloadshedding_subscription">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/loadshedding_subscription/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewloadshedding_subscription()" title="Add New loadshedding_subscription"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewloadshedding_subscription()
+	{
+		var dataReq=new Object();
+		dataReq.SheddingGUID=ItemValue("SheddingGUID");
+		dataReq.DateAdded=ItemValue("DateAdded");
+		dataReq.SuburbID=ItemValue("SuburbID");
+		dataReq.UserID=ItemValue("UserID");
+
+		if( dataReq.SheddingGUID == "")
+		{
+			showMessage("Enter a value for Shedding GUID",'Error',ShowButton);
+		}
+		else if( dataReq.DateAdded == "")
+		{
+			showMessage("Enter a value for Date Added",'Error',ShowButton);
+		}
+		else if( dataReq.SuburbID == "")
+		{
+			showMessage("Enter a value for Suburb ID",'Error',ShowButton);
+		}
+		else if( dataReq.UserID == "")
+		{
+			showMessage("Enter a value for User ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAloadshedding_subscription").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/loadshedding_subscription",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_loadshedding_subscription_Response
+		);
+	}
+}
+
+ function add_loadshedding_subscription_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/loadshedding_subscription/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAloadshedding_subscription").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/suburb/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#SuburbID").append("<option value=\"" + cmbVal.SuburbID + "\">" + cmbVal.SuburbName + "</option>")
+		}
+	  }
+	});
+
+
+	getJsonData(null, "/api/admin/users/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#UserID").append("<option value=\"" + cmbVal.UserID + "\">" + cmbVal.UserGUID + "</option>")
+		}
+	  }
+	});
+
+</script>

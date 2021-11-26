@@ -1,0 +1,161 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1">
+		<a href="/admin/">Home</a> /
+		<a href="#">{{ title }}</a>
+	</div>
+	<div class="loading" style="" id="loadM_app_settings">
+		<div class="smallload">
+			<div class="neca-anim-fast-fade ">
+				<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+			</div>
+			<div>
+				Please wait..
+			</div>
+		</div>
+	</div>
+
+	<div id='app_settingsControl'>
+		<div class='top-set w3-padding'>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-home fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/'" title="Home"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-plus fa-2x w3-margin-left w3-margin-top"
+				onclick="location = '/admin/app_settings/new'" title="New app_settings"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-sync-alt fa-2x w3-margin-left w3-margin-top"
+				onclick="refreshapp_settings()" title="refresh app_settings"></button>
+		</div>
+
+		<div class="w3-padding display-box" id="app_settingsDataList">
+
+		</div>
+
+
+	</div>
+
+
+</div>
+
+<script>
+
+
+
+	function refreshapp_settings() 
+{
+		hideapp_settingsData();
+
+		$("#app_settingsDataList").html("No Data");
+		getJsonData(null, "/api/admin/app_settings/list",
+			(err) => {
+				errorMsg = "Connection Problem: Error 1";
+				if (err) {
+					if (err.status && err.status == 400 && err.responseText) {
+						errorMsg = err.responseText;
+					}
+				}
+				showMessage(errorMsg, 'Error', showapp_settingsData);
+
+			},
+
+			(result) => {
+				$("#app_settingsDataList").html("");
+				if (result.key && result.data && result.show) {
+					let showData = Object.keys(result.show);
+
+					if (showData.length > 0 && result.data.length > 0) {
+
+						for (let i = 0; i < result.data.length; i++) {
+
+							let row = result.data[i];
+							let Display = "<div class='display-item w3-border w3-border-gray w3-card' data-key='" + row[result.key] + "'>";
+
+							for (let j = 0; j < showData.length; j++) {
+								let k = showData[j];
+
+								Display += "<div class='display-item-value'> " + result.show[k] + " - " + row[k] + "</div>"
+							}
+
+							Display += "<div class='display-item-buttons w3-right-align '><button class='w3-button w3-indigo onapp_settingsUpdate'><i class='fa fa-pen'></i></button> <button class='w3-button w3-indigo onapp_settingsDelete'><i class='fa fa-trash'></i></button></div>"
+							Display += "</div>";
+							$("#app_settingsDataList").append(Display);
+							Display = "";
+
+
+						}
+
+						$(".onapp_settingsUpdate").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							document.location = "/admin/app_settings/edit/" + parentKey;
+						});
+
+
+						$(".onapp_settingsDelete").click(function ()
+ {
+							let parentKey = $(this).parent().parent().attr("data-key");
+							hideapp_settingsData();
+
+
+							deleteJsonData({}, "/api/admin/app_settings/" + parentKey,
+
+
+								(delError) => {
+									errorMsgDel = "Connection Problem: Error 1";
+									if (delError) {
+										if (delError.status && delError.status == 400 && delError.responseText) {
+											errorMsgDel = delError.responseText;
+										}
+									}
+									showMessage(errorMsgDel, 'Error', showapp_settingsData);
+
+								},
+								(result) => {
+									var jResponse = result;
+
+									if (jResponse.status == '1') {
+										showMessage(jResponse.message, 'Success', function () { refreshapp_settings(); showapp_settingsData() });
+
+									}
+									else {
+										showMessage(jResponse.message, 'Error', showapp_settingsData);
+									}
+
+								});
+
+						});
+
+
+					}
+
+				}
+
+				showapp_settingsData();
+			});
+
+	}
+
+	function hideapp_settingsData()
+ {
+		$("#app_settingsControl").hide();
+		$(".loading").show();
+	}
+
+	function showapp_settingsData() 
+{
+		$("#app_settingsControl").show();
+		$(".loading").hide();
+	}
+
+
+
+	refreshapp_settings();
+
+
+
+</script>

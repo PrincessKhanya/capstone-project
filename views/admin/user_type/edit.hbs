@@ -1,0 +1,127 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/user_type/">user_type</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="user_type_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="UserTypeID" id="UserTypeID" value="<?php echo $user_typeInfo->UserTypeID; ?>"/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">User Type Name :</span><input class="w3-input w3-border data-textbox" name="UserTypeName" id="UserTypeName" placeholder="User Type Name" title="User Type Name" maxlength="50" value="" />
+		</div>
+
+		<div class="loading" style="display:none" id="loadEuser_type">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/user_type/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEdituser_type()" title="Save user_type"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEdituser_type()
+	{
+		var dataReq=new Object();
+		dataReq.UserTypeID=ItemValue("UserTypeID");
+		dataReq.UserTypeName=ItemValue("UserTypeName");
+
+		if( dataReq.UserTypeID == "" )
+		{
+			showMessage("Enter a value for User Type ID",'Error',ShowButton);
+		}
+		else if( dataReq.UserTypeName == "" )
+		{
+			showMessage("Enter a value for User Type Name",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEuser_type").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/user_type",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_user_type_Response
+		);
+
+		}
+	}
+
+ function edit_user_type_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/user_type/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEuser_type").hide();
+		$(".form-data").show();
+	}
+
+
+$("#loadEuser_type").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/user_type/{{UserTypeID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load user_type record", "error", () => { document.location = "/admin/user_type/" });
+			}
+		});
+</script>

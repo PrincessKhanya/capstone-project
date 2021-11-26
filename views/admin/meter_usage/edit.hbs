@@ -1,0 +1,168 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter_usage/">meter_usage</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="meter_usage_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="MeterUsageID" id="MeterUsageID" value="<?php echo $meter_usageInfo->MeterUsageID; ?>"/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Usage Date :</span><input class="w3-input w3-border data-textbox" name="UsageDate" id="UsageDate" placeholder="Usage Date" title="Usage Date" value="" type="date" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Current Usage :</span><input class="w3-input w3-border data-textbox" name="CurrentUsage" id="CurrentUsage" placeholder="Current Usage" title="Current Usage" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Day Usage :</span><input class="w3-input w3-border data-textbox" name="DayUsage" id="DayUsage" placeholder="Day Usage" title="Day Usage" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter :</span><select class='w3-input w3-border data-textbox' id='MeterID' name='MeterID'></select>
+		</div>
+
+		<div class="loading" style="display:none" id="loadEmeter_usage">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/meter_usage/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doEditmeter_usage()" title="Save meter_usage"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+	function doEditmeter_usage()
+	{
+		var dataReq=new Object();
+		dataReq.MeterUsageID=ItemValue("MeterUsageID");
+		dataReq.UsageDate=ItemValue("UsageDate");
+		dataReq.CurrentUsage=ItemValue("CurrentUsage");
+		dataReq.DayUsage=ItemValue("DayUsage");
+		dataReq.MeterID=ItemValue("MeterID");
+
+		if( dataReq.MeterUsageID == "" )
+		{
+			showMessage("Enter a value for Meter Usage ID",'Error',ShowButton);
+		}
+		else if( dataReq.UsageDate == "" )
+		{
+			showMessage("Enter a value for Usage Date",'Error',ShowButton);
+		}
+		else if( dataReq.CurrentUsage == "" )
+		{
+			showMessage("Enter a value for Current Usage",'Error',ShowButton);
+		}
+		else if( dataReq.DayUsage == "" )
+		{
+			showMessage("Enter a value for Day Usage",'Error',ShowButton);
+		}
+		else if( dataReq.MeterID == "" )
+		{
+			showMessage("Enter a value for Meter ID",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadEmeter_usage").show();
+			$(".form-data").hide();
+
+			putJsonData(dataReq, "/api/admin/meter_usage",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		edit_meter_usage_Response
+		);
+
+		}
+	}
+
+ function edit_meter_usage_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/meter_usage/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadEmeter_usage").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/meter/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#MeterID").append("<option value=\"" + cmbVal.MeterID + "\">" + cmbVal.MeterGUID + "</option>")
+		}
+	  }
+	});
+
+$("#loadEmeter_usage").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/meter_usage/{{MeterUsageID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load meter_usage record", "error", () => { document.location = "/admin/meter_usage/" });
+			}
+		});
+</script>

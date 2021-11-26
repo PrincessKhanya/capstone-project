@@ -1,0 +1,145 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">New meter_user</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter_user/">meter_user</a> / 
+		<a href="#">New meter_user</a>
+	</div>
+	<div id="meter_user_form" class="formstyle">
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter User GUID :</span><input class="w3-input w3-border data-textbox" name="MeterUserGUID" id="MeterUserGUID" placeholder="Meter User GUID" title="Meter User GUID" value="" type="number" />
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter :</span><select class='w3-input w3-border data-textbox' id='MeterID' name='MeterID'></select>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Users :</span><select class='w3-input w3-border data-textbox' id='UserID' name='UserID'></select>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Date Added :</span>		<input class="w3-input w3-border data-textbox" name="DateAdded" id="DateAdded" placeholder="Date Added" title="Date Added" value="" type="date" />
+		</div>
+
+		<div class="loading" style="display:none" id="loadAmeter_user">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+		<div class="form-data">
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = '/admin/meter_user/'" title="Back"></button>
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-save fa-2x" onclick="doNewmeter_user()" title="Add New meter_user"></button>
+		</div>
+	</div>
+</div>
+<script>
+
+	function doNewmeter_user()
+	{
+		var dataReq=new Object();
+		dataReq.MeterUserGUID=ItemValue("MeterUserGUID");
+		dataReq.MeterID=ItemValue("MeterID");
+		dataReq.UserID=ItemValue("UserID");
+		dataReq.DateAdded=ItemValue("DateAdded");
+
+		if( dataReq.MeterUserGUID == "")
+		{
+			showMessage("Enter a value for Meter User GUID",'Error',ShowButton);
+		}
+		else if( dataReq.MeterID == "")
+		{
+			showMessage("Enter a value for Meter ID",'Error',ShowButton);
+		}
+		else if( dataReq.UserID == "")
+		{
+			showMessage("Enter a value for User ID",'Error',ShowButton);
+		}
+		else if( dataReq.DateAdded == "")
+		{
+			showMessage("Enter a value for Date Added",'Error',ShowButton);
+		}
+		else 
+		{
+
+			$("#loadAmeter_user").show();
+			$(".form-data").hide();
+
+			postJsonData(dataReq, "/api/admin/meter_user",
+			(err) => {
+
+			errorMsg = "Connection Problem: Error 1";
+			if (err) {
+			if (err.status && err.status == 400 && err.responseText) {
+			errorMsg = err.responseText;
+			}
+		}
+		showMessage(errorMsg, 'Error', ShowButton);
+		},
+		add_meter_user_Response
+		);
+	}
+}
+
+ function add_meter_user_Response(data) 
+{
+			var jResponse = data;
+
+			if (jResponse.status == '1') {
+		showMessage(jResponse.message, 'Success', function () {document.location = '/admin/meter_user/'; });
+			}
+			else {
+		showMessage(jResponse.message, 'Error', ShowButton);
+			}
+
+
+		}
+
+	function ShowButton()
+	{
+		$("#loadAmeter_user").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/meter/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#MeterID").append("<option value=\"" + cmbVal.MeterID + "\">" + cmbVal.MeterGUID + "</option>")
+		}
+	  }
+	});
+
+
+	getJsonData(null, "/api/admin/users/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#UserID").append("<option value=\"" + cmbVal.UserID + "\">" + cmbVal.UserGUID + "</option>")
+		}
+	  }
+	});
+
+</script>

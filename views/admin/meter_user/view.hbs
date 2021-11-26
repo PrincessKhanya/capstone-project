@@ -1,0 +1,116 @@
+<header>
+	<div class="header-container">
+		<div class="header-content">
+			<div class="entry-title">{{ title }}</div>
+		</div>
+	</div>
+</header>
+
+<div class="content-container">
+	<div class="breadcrum1"> 
+		<a href="/admin/">Home</a> / 
+		<a href="/admin/meter_user/">meter_user</a> / 
+		<a href="#">{{ title }}</a>
+	</div>
+	<div id="meter_user_form" class="formstyle">
+		<div class="form-data">
+	<input type="hidden" name="MeterUserID" id="MeterUserID" value="<?php echo $meter_userInfo->MeterUserID; ?>" readonly=''/>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Meter User GUID :</span><input class="w3-input w3-border data-textbox" name="MeterUserGUID" id="MeterUserGUID" placeholder="Meter User GUID" title="Meter User GUID" value="" type="number"  readonly=''/>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Meter :</span><select class='w3-input w3-border data-textbox' id='MeterID' name='MeterID' readonly=''></select>
+		</div>
+
+		<div class="form-data">
+		<span class="label-check w3-border-red">Users :</span><select class='w3-input w3-border data-textbox' id='UserID' name='UserID' readonly=''></select>
+		</div>
+
+		<div class="form-data">
+			<span class="label-check w3-border-red">Date Added :</span><input class="w3-input w3-border data-textbox" name="DateAdded" id="DateAdded" placeholder="Date Added" title="Date Added" value="" type="date"  readonly=''/>
+		</div>
+
+		<div class="loading" style="display:none" id="loadVmeter_user">
+			<div class="smallload">
+				<div class="neca-anim-fast-fade ">
+					<img style="width:15%;min-width:100px; max-width: 200px" src="/img/load.png" />
+				</div>
+				<div>
+					Please wait..
+				</div>
+			</div>
+		</div>
+
+		<div class="form-data">
+
+			<button class="w3-button w3-indigo w3-hover-dark-gray fa fa-arrow-left fa-2x" onclick="location = 'admin/meter_user/'" title="Back"></button>
+		</div>
+
+	</div>
+</div>
+<script>
+
+
+	function ShowButton()
+	{
+		$("#loadVmeter_user").hide();
+		$(".form-data").show();
+	}
+
+
+
+	getJsonData(null, "/api/admin/meter/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#MeterID").append("<option value=\"" + cmbVal.MeterID + "\">" + cmbVal.MeterGUID + "</option>")
+		}
+	  }
+	});
+
+
+	getJsonData(null, "/api/admin/users/",
+	(err) => {
+	}
+	,
+	(data) => {
+	  if (data.length > 0) {
+		for (let i = 0; i < data.length; i++) {
+		  let cmbVal = data[i];
+		  $("#UserID").append("<option value=\"" + cmbVal.UserID + "\">" + cmbVal.UserGUID + "</option>")
+		}
+	  }
+	});
+
+$("#loadVmeter_user").show();
+$(".form-data").hide();
+
+	getJsonData(null, "/api/admin/meter_user/{{MeterUserID}}",
+		(err) => {
+		}
+		,
+		(data) => {
+
+			try {
+				if (data) {
+					let keys = Object.keys(data);
+					for (let i = 0; i < keys.length; i++) {
+						$("#" + keys[i]).val(data[keys[i]]);
+					}
+					ShowButton();
+
+					return;
+				}
+			}
+			catch (e) {
+				showMessage("Could not load meter_user record", "error", () => { document.location = "/admin/meter_user/" });
+			}
+		});
+</script>
